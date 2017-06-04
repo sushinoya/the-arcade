@@ -67,6 +67,21 @@ class Game {
     callback();
   }
 
+  //Setting up the canvas
+  drawCanvas() {
+    //Filling the entire width x height of the canvas with a black background
+    this.context.fillStyle = '#000';
+    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.drawRectangle(this.ball);
+  }
+
+  //For drawing a white ball
+  drawRectangle(rectangle) {
+    this.context.fillStyle = '#fff';
+    this.context.fillRect(this.ball.position.x, this.ball.position.y, this.ball.size.x, this.ball.size.y);
+
+  }
+
   //This function allows updating the position of the ball with respect to time.
   // Distance = Speed x Time
   updatePosition(time) {
@@ -83,17 +98,10 @@ class Game {
       this.ball.velocity.y = - this.ball.velocity.y;
     }
 
-    //Filling the entire width x height of the canvas with a black background
-    this.context.fillStyle = '#000';
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-    //Drawing a white ball
-    this.context.fillStyle = '#fff';
-    this.context.fillRect(this.ball.position.x, this.ball.position.y, this.ball.size.x, this.ball.size.y);
+    this.drawCanvas()
   }
 
 }
-
 
 //Getting the Canvas element with the id 'pong'
 const canvas = document.getElementById('pong');
