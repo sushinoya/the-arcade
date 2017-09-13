@@ -4,6 +4,18 @@ class Vector {
     this.x = x;
     this.y = y;
   }
+
+  //Get the resultant vector magnitde: hypotenuse of the vector triangle
+  get resultant() {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  }
+
+  //Set the resultant vector magnitde
+  set resultant(value) {
+    const fact = value / this.resultant;
+    this.x *= fact;
+    this.y *= fact;
+  }
 }
 
 // A class to aid in defining rectangles
@@ -58,14 +70,6 @@ class Game {
     //inherits from the rectangle class)
     this.ball = new Ball;
 
-    //Defining the default velocity of the ball.
-    this.ball.velocity.x = 100;
-    this.ball.velocity.y = 100;
-
-    //Defining the default position of the ball.
-    this.ball.position.x = 5;
-    this.ball.position.y = 5;
-
     //Constructing two Players which are objects of the Player class (which in turn
     //inherits from the rectangle class)
     this.players = [new Player, new Player];
@@ -88,6 +92,18 @@ class Game {
       requestAnimationFrame(callback);
     };
     callback();
+
+    //Initialises the position and velocity of the ball
+    this.resetGame();
+  }
+
+ //This function changes the vertical component of the ball's velocity on collision
+ //with a player
+  changeDirectionOnCollision(player, ball) {
+    if (player.left < ball.right && player.right > ball.left &&
+        player.top < ball.bottom && player.bottom > ball.top) {
+          ball.velocity.x = -ball.velocity.x;
+        }
   }
 
   //Setting up the canvas
@@ -106,6 +122,26 @@ class Game {
                           rectangle.size.x, rectangle.size.y);
   }
 
+  resetGame() {
+    //Defining the default velocity to be stationary.
+    this.ball.velocity.x = 0;
+    this.ball.velocity.y = 0;
+
+    //Defining the default position of the ball.
+    this.ball.position.x = this.canvas.width / 2;
+    this.ball.position.y = this.canvas.height / 2;
+  }
+
+  startGame() {
+    if (this.ball.velocity.x === 0 && this.ball.velocity.y === 0) {
+
+      //Randomly moves to either of the players (ternary operation)
+      this.ball.velocity.x = 300 * (Math.random() > 0.5 ? 1 : -1);
+      this.ball.velocity.y = 300 * Math.random();
+      this.ball.velocity.resultant = 200;
+    }
+  }
+
   //This function allows updating the position of the ball with respect to time.
   // Distance = Speed x Time
   updatePosition(time) {
@@ -115,7 +151,12 @@ class Game {
     //Preventing ball form moving out of the canvas; i.e, simulating bouncing off
     //the walls. If the ball touches the edge of the canvas, invert the velocity.
     if (this.ball.left < 0 || this.ball.right > this.canvas.width) {
-      this.ball.velocity.x = - this.ball.velocity.x;
+
+      //If the direction of the ball is left, player one gets the score and if left
+      //player two (zero here) gets the score
+      const playerId = this.ball.velocity.x < 0 | 0
+      this.players[playerId].score++;
+      this.resetGame();
     }
 
     if (this.ball.top < 0 || this.ball.bottom > this.canvas.height) {
@@ -125,7 +166,9 @@ class Game {
     //The COM player follows the y-coordinate of the ball exactly
     this.players[1].position.y = this.ball.position.y;
 
-    this.drawCanvas()
+    this.players.forEach(player => this.changeDirectionOnCollision(player, this.ball));
+
+    this.drawCanvas();
   }
 
 }
@@ -133,3 +176,13 @@ class Game {
 //Getting the Canvas element with the id 'pong'
 const canvas = document.getElementById('pong');
 const game = new Game(canvas);
+
+//Add mouse interaction
+canvas.addEventListener('mousemove', event => {
+  game.players[0].position.y = event.offsetY;
+});
+
+//Start game on click
+canvas.addEventListener('click', event => {
+  game.startGame();
+});
