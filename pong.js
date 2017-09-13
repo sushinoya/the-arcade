@@ -8,27 +8,27 @@ class Vector {
 
 // A class to aid in defining rectangles
 class Rectangle {
-  constructor (width, height) {
-    this.position = new Vector;
+  constructor (width = 0, height = 0) {
+    this.position = new Vector(0, 0);
     this.size = new Vector(width, height);
   }
 
   //Getter methods for the exact position of the left, right, top and bottom
   //edges of the rectangle.
   get left() {
-    return this.position.x - this.size.x / 2;
+    return this.position.x - (this.size.x / 2);
   }
 
   get right() {
-    return this.position.x + this.size.x / 2;
+    return this.position.x + (this.size.x / 2);
   }
 
   get top() {
-    return this.position.y - this.size.y / 2;
+    return this.position.y - (this.size.y / 2);
   }
 
   get bottom() {
-    return this.position.y + this.size.y / 2;
+    return this.position.y + (this.size.y / 2);
   }
 
 }
@@ -44,21 +44,27 @@ class Game {
   constructor(canvas) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
+    this.count = 0
+
 
     //Constructing a ball which is an object of the Ball class (which in turn
     //inherits from the rectangle class)
     this.ball = new Ball;
 
-    //Defining the velocity of the ball by default.
+    //Defining the default velocity of the ball.
     this.ball.velocity.x = 100;
     this.ball.velocity.y = 100;
+
+    //Defining the default position of the ball.
+    this.ball.position.x = 5;
+    this.ball.position.y = 5;
 
     let lastTime;
     //This function calls requestAnimationFrame recursively to animate according to
     //updated positions
     const callback = (milliseconds) => {
       if (lastTime) {
-        var secondsSinceLastRefresh = (milliseconds - lastTime) / 1000;
+        let secondsSinceLastRefresh = (milliseconds - lastTime) / 1000;
         this.updatePosition(secondsSinceLastRefresh);
       }
       lastTime = milliseconds;
@@ -78,8 +84,8 @@ class Game {
   //For drawing a white ball
   drawRectangle(rectangle) {
     this.context.fillStyle = '#fff';
-    this.context.fillRect(this.ball.position.x, this.ball.position.y, this.ball.size.x, this.ball.size.y);
-
+    this.context.fillRect(rectangle.position.x, rectangle.position.y,
+                          rectangle.size.x, rectangle.size.y);
   }
 
   //This function allows updating the position of the ball with respect to time.
@@ -97,7 +103,6 @@ class Game {
     if (this.ball.top < 0 || this.ball.bottom > this.canvas.height) {
       this.ball.velocity.y = - this.ball.velocity.y;
     }
-
     this.drawCanvas()
   }
 
