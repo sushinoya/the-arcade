@@ -40,6 +40,13 @@ class Ball extends Rectangle {
   }
 }
 
+class Player extends Rectangle {
+  constructor () {
+    super (20, 100)
+    this.score = 0;
+  }
+}
+
 class Game {
   constructor(canvas) {
     this.canvas = canvas;
@@ -58,6 +65,16 @@ class Game {
     //Defining the default position of the ball.
     this.ball.position.x = 5;
     this.ball.position.y = 5;
+
+    //Constructing two Players which are objects of the Player class (which in turn
+    //inherits from the rectangle class)
+    this.players = [new Player, new Player];
+
+    //Defining the default position of the ball.
+    this.players[0].position.x = 40;
+    this.players[0].position.y = this.canvas.height / 2;
+    this.players[1].position.x = this.canvas.width - 40;
+    this.players[1].position.y = this.canvas.height / 2;
 
     let lastTime;
     //This function calls requestAnimationFrame recursively to animate according to
@@ -79,12 +96,13 @@ class Game {
     this.context.fillStyle = '#000';
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.drawRectangle(this.ball);
+    this.players.forEach(player => this.drawRectangle(player))
   }
 
   //For drawing a white ball
   drawRectangle(rectangle) {
     this.context.fillStyle = '#fff';
-    this.context.fillRect(rectangle.position.x, rectangle.position.y,
+    this.context.fillRect(rectangle.left, rectangle.top,
                           rectangle.size.x, rectangle.size.y);
   }
 
@@ -103,6 +121,10 @@ class Game {
     if (this.ball.top < 0 || this.ball.bottom > this.canvas.height) {
       this.ball.velocity.y = - this.ball.velocity.y;
     }
+
+    //The COM player follows the y-coordinate of the ball exactly
+    this.players[1].position.y = this.ball.position.y;
+
     this.drawCanvas()
   }
 
