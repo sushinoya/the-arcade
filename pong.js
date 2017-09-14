@@ -93,17 +93,59 @@ class Game {
     };
     callback();
 
+    //We make an array of canvases representing different digits for displaying score
+    this.CHAR_PIXEL = 10;
+    this.CHARS = [
+            '111101101101111',
+            '010010010010010',
+            '111001111100111',
+            '111001111001111',
+            '101101111001001',
+            '111100111001111',
+            '111100111101111',
+            '111001001001001',
+            '111101111101111',
+            '111101111001111',
+          ].map(str => {
+            const canvas = document.createElement('canvas');
+            canvas.height = this.CHAR_PIXEL * 5;
+            canvas.width = this.CHAR_PIXEL * 3;
+            const context = canvas.getContext('2d');
+            context.fillStyle = '#fff';
+
+            str.split('').forEach((fill, i) => {
+              if (fill === '1') {
+                context.fillRect(
+                    (i % 3) * this.CHAR_PIXEL,
+                    (i / 3 | 0) * this.CHAR_PIXEL,
+                    this.CHAR_PIXEL,
+                    this.CHAR_PIXEL);
+              }
+            });
+            return canvas;
+          });
+
+
     //Initialises the position and velocity of the ball
     this.resetGame();
   }
 
  //This function changes the vertical component of the ball's velocity on collision
  //with a player
-  changeDirectionOnCollision(player, ball) {
+  onCollision(player, ball) {
+    //Checks for collision
     if (player.left < ball.right && player.right > ball.left &&
         player.top < ball.bottom && player.bottom > ball.top) {
+
+          const speed = ball.velocity.resultant;
+
+          //Change horizontal direction
           ball.velocity.x = -ball.velocity.x;
-        }
+
+          //Increase Ball's speed
+          ball.velocity.resultant *= 1.05;
+    }
+
   }
 
   //Setting up the canvas
@@ -113,6 +155,20 @@ class Game {
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.drawRectangle(this.ball);
     this.players.forEach(player => this.drawRectangle(player))
+  }
+
+  drawScore() {
+    const align = this.canvas.width / 3;
+    const CHAR_WIDTH = this.CHAR_PIXEL * 4
+    this.players.forEach((player, index) => {
+      const chars = player.score.toString().split('');
+      const offset = align * (index + 1) - (CHAR_WIDTH * chars.length / 2) *
+                     this.CHAR_PIXEL / 2;
+     chars.forEach((char, pos) => {
+       this.context.drawImage(this.CHARS[char | 0],
+                              offset + position * CHAR_WIDTH);
+     });
+   });
   }
 
   //For drawing a white ball
@@ -138,6 +194,9 @@ class Game {
       //Randomly moves to either of the players (ternary operation)
       this.ball.velocity.x = 300 * (Math.random() > 0.5 ? 1 : -1);
       this.ball.velocity.y = 300 * Math.random();
+
+      //Sets the velocity constant irregardless of the random direction the
+      //balls moves in.
       this.ball.velocity.resultant = 200;
     }
   }
@@ -166,7 +225,7 @@ class Game {
     //The COM player follows the y-coordinate of the ball exactly
     this.players[1].position.y = this.ball.position.y;
 
-    this.players.forEach(player => this.changeDirectionOnCollision(player, this.ball));
+    this.players.forEach(player => this.onCollision(player, this.ball));
 
     this.drawCanvas();
   }
