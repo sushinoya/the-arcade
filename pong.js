@@ -64,6 +64,7 @@ class Game {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
     this.count = 0
+    this.numberOfRallies = 0;
 
 
     //Constructing a ball which is an object of the Ball class (which in turn
@@ -93,8 +94,8 @@ class Game {
     };
     callback();
 
-    //We make an array of canvases representing different digits for displaying score
-    this.CHAR_PIXEL = 10;
+    //An array of canvases representing different digits for displaying score
+    this.CHAR_PIXEL = 5;
     this.CHARS = [
             '111101101101111',
             '010010010010010',
@@ -130,6 +131,12 @@ class Game {
     this.resetGame();
   }
 
+  //Clears the canvas
+  clear() {
+    this._context.fillStyle = '#000';
+    this._context.fillRect(0, 0, this._canvas.width, this._canvas.height);
+  }
+
  //This function changes the vertical component of the ball's velocity on collision
  //with a player
   onCollision(player, ball) {
@@ -137,6 +144,7 @@ class Game {
     if (player.left < ball.right && player.right > ball.left &&
         player.top < ball.bottom && player.bottom > ball.top) {
 
+          this.numberOfRallies++;
           const speed = ball.velocity.resultant;
 
           //Change horizontal direction
@@ -157,16 +165,27 @@ class Game {
     this.players.forEach(player => this.drawRectangle(player))
   }
 
+  //This function displays the score for each player on every update
   drawScore() {
     const align = this.canvas.width / 3;
     const CHAR_WIDTH = this.CHAR_PIXEL * 4
+
+    const rallies = this.numberOfRallies.toString().split('');
+    console.log(this.numberOfRallies);
+    const offset = align * (6 + 1) - (CHAR_WIDTH * rallies.length / 2) *
+                   this.CHAR_PIXEL / 2;
+    rallies.forEach((char, position) => {
+      this.context.drawImage(this.CHARS[char | 0],
+                             offset + position * CHAR_WIDTH, 20);
+    });
+
     this.players.forEach((player, index) => {
       const chars = player.score.toString().split('');
       const offset = align * (index + 1) - (CHAR_WIDTH * chars.length / 2) *
                      this.CHAR_PIXEL / 2;
-     chars.forEach((char, pos) => {
+     chars.forEach((char, position) => {
        this.context.drawImage(this.CHARS[char | 0],
-                              offset + position * CHAR_WIDTH);
+                              offset + position * CHAR_WIDTH, 20);
      });
    });
   }
@@ -228,6 +247,7 @@ class Game {
     this.players.forEach(player => this.onCollision(player, this.ball));
 
     this.drawCanvas();
+    this.drawScore();
   }
 
 }
