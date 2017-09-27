@@ -9,13 +9,106 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
     integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-</head>
-<body>
-    <canvas id="pong" width="600" height="400" />
-    <script src="pong.js"></script>
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Germania+One|Joti+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Kelly+Slab|Love+Ya+Like+A+Sister|Press+Start+2P|Rock+Salt" rel="stylesheet">
 
+
+    <style type="text/css">
+
+        html {
+          position: relative;
+          min-height: 100%;
+        }
+
+        body {
+            margin: 0 0 100px;
+            padding: 25px;
+        }
+
+        footer {
+            font-family: sans-serif;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 40px;
+            width: 100%;
+            overflow:hidden;
+        }
+
+
+        #canvas-container {
+          text-align:center;
+        }
+
+        canvas {
+          display: inline;
+        }
+
+        .arcade-banner {
+            font-family: 'Joti One', cursive;
+            font-size: 70px;
+        }
+
+        .game-heading {
+          text-align: center;
+          /*font-family: 'Rock Salt', cursive;*/
+          font-family: 'Love Ya Like A Sister', cursive;
+          /*font-family: 'Press Start 2P', cursive;*/
+          /*font-family: 'Kelly Slab', cursive;*/
+        }
+
+        .copyright {
+            float:right;
+        }
+
+    </style>
+
+</head>
+<body background="./background.jpg">
+    <div class="row">
+      <div class="col-xs-12">
+        <h1 class="arcade-banner" align="center"> the arcade.</h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="canvas-container" class="col-xs-6">
+        <h1 class="game-heading"> pong.</h1>
+        <canvas id="pong" width="600" height="400" align="center" />
+      </div>
+
+      <div class="col-=xs-6">
+        <h1 class="game-heading">coming up:</h1> </br>
+        <h3 class="game-heading">space. impact.</h3>
+        <h3 class="game-heading">tetris.</h3>
+        <h3 class="game-heading">snake.</h3>
+      </div>
+
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+           <div class="col-md-6"></div>
+           <div class="col-md-6">
+                <span class="copyright">
+                   &copy; Suyash Shekhar 2017
+                   &bull;
+                   <a href="https://www.github.com/sushinoya" target="_blank">Github</a>
+                   &bull;
+                   <a href="http://www.suyashshekhar.com" target="_blank">Website</a>
+                   &bull;
+                   <a href="mailto:suyash@nushackers.org">Email</a>
+                </span>
+           </div>
+         </div>
+    </footer>
+
+
+
+      <script src="pong.js"></script>
+      <!-- Latest compiled and minified JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </body>
 </html>
